@@ -42,13 +42,11 @@ namespace VeryHotKeys.WinForms
 
             public readonly uint finalKey;
             private readonly int hotID = 9000;
-            // public Action OnTriggerFunction { get; private set; }
-            IntPtr handle;
 
             /// <summary>
             /// Constructor for a new hotkey
             /// </summary>
-            /// <param name="window">The current WinForms window. Use <see cref="HotKeyRegisterer.HotKeyRegisterer(IntPtr, Action, HotKeyMods, key)"/> for WinForms or other.</param>
+            /// <param name="window">The current WinForms window.</param>
             /// <param name="act">What to execute when the hot key is called</param>
             /// <param name="mod">The first optional key combination </param>
             /// <param name="key">The final key, binded with <paramref name="mod"/></param>
@@ -63,7 +61,7 @@ namespace VeryHotKeys.WinForms
             /// <summary>
             /// Constructor for a new hotkey
             /// </summary>
-            /// <param name="window">The current WPF window. Use <see cref="HotKeyRegisterer.HotKeyRegisterer(IntPtr, Action, HotKeyMods, ConsoleKey)"/> for WinForms or other.</param>
+            /// <param name="window">The current WinForms window.</param>
             /// <param name="act">What to execute when the hot key is called</param>
             /// <param name="mod">The first optional key combination </param>
             /// <param name="key">The final key using the ConsoleKey enum, for more keys, use the other constructor. Binded with <paramref name="mod"/></param>
