@@ -43,6 +43,8 @@ namespace VeryHotKeys.WinForms
             public readonly uint finalKey;
             private readonly int hotID = 9000;
 
+            IntPtr handle = default(IntPtr);
+
             /// <summary>
             /// Constructor for a new hotkey
             /// </summary>
