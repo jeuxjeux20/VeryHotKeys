@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeryHotKeys", "VeryHotKeys\VeryHotKeys.csproj", "{2F1C850E-3970-4EF1-B4D4-C19D325C4AD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeryHotKeys.WinForms", "VeryHotKeys.WinForms\VeryHotKeys.WinForms.csproj", "{0A681C2E-7A27-4CAA-B10A-1C3F2D414A0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeryHotKeys.WPF", "VeryHotKeys.WPF\VeryHotKeys.WPF.csproj", "{2F1C850E-3970-4EF1-B4D4-C19D325C4AD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A681C2E-7A27-4CAA-B10A-1C3F2D414A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A681C2E-7A27-4CAA-B10A-1C3F2D414A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A681C2E-7A27-4CAA-B10A-1C3F2D414A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A681C2E-7A27-4CAA-B10A-1C3F2D414A0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F1C850E-3970-4EF1-B4D4-C19D325C4AD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F1C850E-3970-4EF1-B4D4-C19D325C4AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F1C850E-3970-4EF1-B4D4-C19D325C4AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
