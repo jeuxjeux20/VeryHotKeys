@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace VeryHotKeys.WPF
+namespace VeryHotKeys.Wpf
 {
-    class HotKeyRegisterer : IDisposable
+    public class HotKeyRegisterer : IDisposable
     {
-        private static int idCount = 0;
+        private static int _idCount;
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -21,13 +19,13 @@ namespace VeryHotKeys.WPF
         /// <summary>
         /// Called when the hot key is pressed. 
         /// </summary>
-        public event Action OnTriggerFunction;
+        public event EventHandler OnTriggerFunction;
 
-        private HwndSource source;
-        public readonly uint finalKey;
-        private readonly int hotID = 9000;
+        private HwndSource _source;
+        private uint _finalKey;
+        private readonly int _hotId = 9000;
         // public Action OnTriggerFunction { get; private set; }
-        IntPtr handle;
+        private IntPtr _handle;
 
         /// <summary>
         /// Constructor for a new hotkey
@@ -36,39 +34,54 @@ namespace VeryHotKeys.WPF
         /// <param name="act">What to execute when the hot key is called</param>
         /// <param name="mod">The first optional key combination </param>
         /// <param name="key">The final key, binded with <paramref name="mod"/></param>
-        public HotKeyRegisterer(System.Windows.Window window, Action act, HotKeyMods mod, uint key)
+        public HotKeyRegisterer(Window window, EventHandler act, HotKeyMods mod, uint key)
         {
-            idCount++;
-            hotID += idCount;
+            _idCount++;
+            _hotId += _idCount;
             OnTriggerFunction += act;
-            var interopHelp = new WindowInteropHelper(window);
-            handle = interopHelp.Handle;
-            source = HwndSource.FromHwnd(handle);
-            source.AddHook(HwndHook);
-            finalKey = key;
-            RegisterHotKey(handle, hotID, (uint)mod, key);
+            if (!window.IsLoaded)
+            {
+                window.Loaded += (_, __) => Initialize(window, mod, key);
+                return;
+            }
+            Initialize(window, mod, key);
         }
+
+        private void Initialize(Window window, HotKeyMods mod, uint key)
+        {
+            var interopHelp = new WindowInteropHelper(window);
+            _handle = interopHelp.Handle;
+            _source = HwndSource.FromHwnd(_handle);
+            _source.AddHook(HwndHook);
+            _finalKey = key;
+            RegisterHotKey(_handle, _hotId, (uint) mod, key);
+            window.Closed += (_, __) => Dispose();
+        }
+
         /// <summary>
         /// Constructor for a new hotkey
         /// </summary>
         /// <param name="window">The current WPF window.</param>
         /// <param name="act">What to execute when the hot key is called</param>
         /// <param name="mod">The first optional key combination </param>
-        /// <param name="key">The final key using the ConsoleKey enum, for more keys, use the other constructor. Binded with <paramref name="mod"/></param>
-        public HotKeyRegisterer(System.Windows.Window window, Action act, HotKeyMods mod, ConsoleKey key) : this(window, act, mod, (uint)key) { }
-
+        /// <param name="key">The final key using the ConsoleKey enum, for more keys, use the other constructor. Bound with <paramref name="mod"/></param>
+        public HotKeyRegisterer(Window window, EventHandler act, HotKeyMods mod, ConsoleKey key) : this(window, act, mod, (uint)key) { }
+        /// <inheritdoc />
+        public HotKeyRegisterer(Window window, Action act, HotKeyMods mod, ConsoleKey key) : this(window, (_,__) => act(), mod, (uint)key) { }
+        /// <inheritdoc />
+        public HotKeyRegisterer(Window window, Action act, HotKeyMods mod, uint key) : this(window, (_,__) => act(), mod, key) { }
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            const int WM_HOTKEY = 0x0312;
+            const int wmHotkey = 0x0312;
             switch (msg)
             {
-                case WM_HOTKEY:
-                    if (wParam.ToInt32() == hotID)
+                case wmHotkey:
+                    if (wParam.ToInt32() == _hotId)
                     {
                         int vkey = (((int)lParam >> 16) & 0xFFFF);
-                        if (vkey == finalKey)
+                        if (vkey == _finalKey)
                         {
-                            OnTriggerFunction();
+                            OnTriggerFunction?.Invoke(this, EventArgs.Empty);
                         }
                         handled = true;
                     }
@@ -78,32 +91,30 @@ namespace VeryHotKeys.WPF
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // Pour détecter les appels redondants
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                     OnTriggerFunction = null;
                 }
 
-                source.RemoveHook(HwndHook);
-                UnregisterHotKey(handle, hotID);
-                disposedValue = true;
+                _source.RemoveHook(HwndHook);
+                UnregisterHotKey(_handle, _hotId);
+                _disposedValue = true;
             }
         }
 
         ~HotKeyRegisterer()
         {
-            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
             Dispose(false);
         }
 
         public void Dispose()
         {
-            // Ne modifiez pas ce code. Placez le code de nettoyage dans Dispose(bool disposing) ci-dessus.
             Dispose(true);
             GC.SuppressFinalize(this);
         }

@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace VeryHotKeys.WPF
+namespace VeryHotKeys.Wpf
 {
     /// <summary>
-    /// Mods to use in <see cref="HotKeyRegisterer.HotKeyRegisterer(System.Windows.Window, Action, WPF.HotKeyMods, ConsoleKey)"/>
+    /// Mods to use in <see cref="HotKeyRegisterer"/>
     /// </summary>
 
     [Flags]
